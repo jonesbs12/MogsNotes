@@ -11,6 +11,7 @@ This is a work in progress for personal use. You are free to use this project yo
 - Add an image GUI for a more compact option
 - Add more options to show/hide data types(eg. hide drops, hide spells)
 - Add command to call up data on any mob in the zone
+- Convert drops from ID to Name
 
 ## Installation
 
