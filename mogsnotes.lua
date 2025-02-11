@@ -63,6 +63,9 @@ windower.register_event('target change', function(new_id, old_id)
                 if target_info.Scent then
                     target_data = target_data .. 'Scent '
                 end
+                if target_info.JA then
+                    target_data = target_data .. 'JA '
+                end
                 target_data = target_data .. '\n'
 
                 --target_data = target_data .. '\\cs(255,255,0)Job: \\cr' .. tostring(target_info.Job) .. '\n'
@@ -72,7 +75,6 @@ windower.register_event('target change', function(new_id, old_id)
 
                 target_data = target_data .. '\\cs(255,255,0)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
-                target_data = target_data .. '\\cs(255,255,0)JA: \\cr' .. tostring(target_info.JA) .. '\n'               
                 target_data = target_data .. '\\cs(255,255,0)Spells: \\cr' .. table.concat(target_info.Spells, ', ') .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Drops: \\cr' .. table.concat(target_info.Drops, ', ') .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Modifiers: \\cr' .. '\n'

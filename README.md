@@ -6,6 +6,12 @@ MogsNotes is an addon for Final Fantasy XI (FFXI) Windower 4 that displays a win
 
 This is a work in progress for personal use. You are free to use this project yourself. Feel free to contribute to this project by submitting pull requests or bug reports.
 
+## Future Plans
+- Better organize the GUI
+- Add an image GUI for a more compact option
+- Add more options to show/hide data types(eg. hide drops, hide spells)
+- Add command to call up data on any mob in the zone
+
 ## Installation
 
 To install MogsNotes, follow these steps:
