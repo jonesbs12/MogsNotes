@@ -98,7 +98,14 @@ windower.register_event('target change', function(new_id, old_id)
                 target_data = target_data .. '\\cs(255,255,0)Weapon: \\cr\n'
                 for _, mod in ipairs(weapon_modifiers) do
                     if target_info.Modifiers[mod] then
-                        target_data = target_data .. mod .. ': ' .. tostring(target_info.Modifiers[mod]) .. ' '
+                        local value = target_info.Modifiers[mod]
+                        local value_color = '\\cs(255,255,255)' -- Default to white
+                        if value > 1 then
+                            value_color = '\\cs(0,255,0)' -- Green for values over 1
+                        elseif value < 1 then
+                            value_color = '\\cs(255,0,0)' -- Red for values under 1
+                        end
+                        target_data = target_data .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
                     end
                 end
                 target_data = target_data .. '\n'
@@ -108,14 +115,28 @@ windower.register_event('target change', function(new_id, old_id)
                 for _, mod in ipairs(dark_modifiers) do
                     if target_info.Modifiers[mod] then
                         local color = color_mappings[mod]
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. tostring(target_info.Modifiers[mod]) .. ' \\cr'
+                        local value = target_info.Modifiers[mod]
+                        local value_color = '\\cs(255,255,255)' -- Default to white
+                        if value > 1 then
+                            value_color = '\\cs(0,255,0)' -- Green for values over 1
+                        elseif value < 1 then
+                            value_color = '\\cs(255,0,0)' -- Red for values under 1
+                        end
+                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
                     end
                 end
                 target_data = target_data .. '\n'
                 for _, mod in ipairs(light_modifiers) do
                     if target_info.Modifiers[mod] then
                         local color = color_mappings[mod]
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. tostring(target_info.Modifiers[mod]) .. ' \\cr'
+                        local value = target_info.Modifiers[mod]
+                        local value_color = '\\cs(255,255,255)' -- Default to white
+                        if value > 1 then
+                            value_color = '\\cs(0,255,0)' -- Green for values over 1
+                        elseif value < 1 then
+                            value_color = '\\cs(255,0,0)' -- Red for values under 1
+                        end
+                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
                     end
                 end
                 target_data = target_data .. '\n'
@@ -141,6 +162,7 @@ windower.register_event('addon command', function(command, ...)
         add_to_chat(123, '  //mogsnotes show : Shows the target_box')
         add_to_chat(123, '  //mogsnotes hide : Hides the target_box')
         add_to_chat(123, '  //mogsnotes rezone : Reloads the zone data')
+        add_to_chat(123, '  //mogsnotes save : Resaves the settings')
     elseif command == 'zone' then
         settings.target_box.show = true
         target_box:show()
@@ -149,6 +171,9 @@ windower.register_event('addon command', function(command, ...)
         target_box:hide()
     elseif command == 'rezone' then
         load_zone_data()
+    elseif command == 'save' then
+        config.save(settings)
+        add_to_chat(123, 'Settings have been saved.')
     end
 end)
 

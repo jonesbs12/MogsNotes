@@ -5,7 +5,10 @@ local defaults = {
             y = windower.get_windower_settings().ui_y_res / 2
         },
         bg = {
-            alpha = 150
+            alpha = 150,
+            red = 100,
+            green = 100,
+            blue = 100
         },
         text = {
             size = 8,
