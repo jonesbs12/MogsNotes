@@ -41,9 +41,5 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 
 ## Contact
 
-For any questions or feedback, please open an issue on the [GitHub repository](https://github.com/yourusername/MogsNotes).
-
-
-
-
+For any questions or feedback, please open an issue on the [GitHub repository](https://github.com/jonesbs12/MogsNotes).
 

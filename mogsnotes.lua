@@ -76,7 +76,7 @@ windower.register_event('target change', function(new_id, old_id)
                 target_data = target_data .. '\\cs(255,255,0)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
                 target_data = target_data .. '\\cs(255,255,0)Spells: \\cr' .. table.concat(target_info.Spells, ', ') .. '\n'
-                target_data = target_data .. '\\cs(255,255,0)Drops: \\cr' .. table.concat(target_info.Drops, ', ') .. '\n'
+                target_data = target_data .. '\\cs(255,255,0)Drops: \\cr' .. format_drops(target_info.Drops) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Modifiers: \\cr' .. '\n'
 
                 -- Define color mappings for each modifier
@@ -244,6 +244,23 @@ function get_immunity_text(immunities)
         end
     end
     return immunity_text
+end
+
+-- Function to format drops with word wrapping every 5 items
+function format_drops(drops)
+    local formatted_drops = ''
+    for i, drop in ipairs(drops) do
+        if i % 5 == 0 then
+            formatted_drops = formatted_drops .. get_item_name(drop) .. '\n'
+        else
+            formatted_drops = formatted_drops .. get_item_name(drop) .. ', '
+        end
+    end
+    -- Remove trailing comma and space if present
+    if formatted_drops:sub(-2) == ', ' then
+        formatted_drops = formatted_drops:sub(1, -3)
+    end
+    return formatted_drops
 end
 
 function add_to_chat(color, text)
