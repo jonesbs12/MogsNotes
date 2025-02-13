@@ -93,8 +93,8 @@ windower.register_event('target change', function(new_id, old_id)
 
                 -- Group weapon and elemental modifiers
                 local weapon_modifiers = {'Slashing', 'Piercing', 'H2H', 'Impact'}
-                local dark_modifiers = {'Fire', 'Ice', 'Wind', 'Light'}
-                local light_modifiers = {'Earth', 'Lightning', 'Water', 'Dark'}                
+                local light_modifiers = {'Fire', 'Ice', 'Wind', 'Light'}
+                local dark_modifiers = {'Earth', 'Lightning', 'Water', 'Dark'}                
 
                 -- Add weapon modifiers
                 target_data = target_data .. '\\cs(255,255,0)Weapon: \\cr\n'
@@ -118,13 +118,18 @@ windower.register_event('target change', function(new_id, old_id)
                     if target_info.Modifiers[mod] then
                         local color = color_mappings[mod]
                         local value = target_info.Modifiers[mod]
+                        local display_value = tostring(value)
                         local value_color = '\\cs(255,255,255)' -- Default to white
-                        if value > 1 then
+                    
+                        if value == -1 then
+                            value_color = '\\cs(0,0,255)' -- Blue for value -1
+                            display_value = 'A'
+                        elseif value > 1 then
                             value_color = '\\cs(0,255,0)' -- Green for values over 1
                         elseif value < 1 then
                             value_color = '\\cs(255,0,0)' -- Red for values under 1
-                        end
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
+                        end                    
+                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. display_value .. ' \\cr'
                     end
                 end
                 target_data = target_data .. '\n'
@@ -132,13 +137,17 @@ windower.register_event('target change', function(new_id, old_id)
                     if target_info.Modifiers[mod] then
                         local color = color_mappings[mod]
                         local value = target_info.Modifiers[mod]
+                        local display_value = tostring(value)
                         local value_color = '\\cs(255,255,255)' -- Default to white
-                        if value > 1 then
+                        if value == -1 then
+                            value_color = '\\cs(0,0,255)' -- Blue for value -1
+                            display_value = 'A'
+                        elseif value > 1 then
                             value_color = '\\cs(0,255,0)' -- Green for values over 1
                         elseif value < 1 then
                             value_color = '\\cs(255,0,0)' -- Red for values under 1
                         end
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
+                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. display_value .. ' \\cr'
                     end
                 end
                 target_data = target_data .. '\n'
@@ -192,9 +201,9 @@ function load_zone_data()
     
     if success then
         mob_data = data
-        add_to_chat(123, 'Loaded mob data for zone: (' .. currentZone .. ')' .. currentZoneName)
+        add_to_chat(123, 'Loaded zone: (' .. currentZone .. ') ' .. currentZoneName)
     else
-        add_to_chat(123, 'Failed: no data for zone: ' .. currentZoneName)
+        add_to_chat(123, 'Loaded zone: (' .. currentZone .. ') ' .. currentZoneName .. ' - No mob data available')
     end
 end
 
