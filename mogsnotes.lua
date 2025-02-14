@@ -75,7 +75,7 @@ windower.register_event('target change', function(new_id, old_id)
 
                 target_data = target_data .. '\\cs(255,255,0)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
-                target_data = target_data .. '\\cs(255,255,0)Spells: \\cr' .. table.concat(target_info.Spells, ', ') .. '\n'
+                target_data = target_data .. '\\cs(255,255,0)Spells: \\cr' .. format_spells(target_info.Spells) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Drops: \\cr' .. format_drops(target_info.Drops) .. '\n'
                 target_data = target_data .. '\\cs(255,255,0)Modifiers: \\cr' .. '\n'
 
@@ -270,6 +270,41 @@ function format_drops(drops)
         formatted_drops = formatted_drops:sub(1, -3)
     end
     return formatted_drops
+end
+
+-- Function to format spells with word wrapping every 5 items
+function format_spells(spells)
+    local formatted_spells = ''
+    for i, spell in ipairs(spells) do
+        if i % 5 == 0 then
+            formatted_spells = formatted_spells .. get_spell_name(spell) .. '\n'
+        else
+            formatted_spells = formatted_spells .. get_spell_name(spell) .. ', '
+        end
+    end
+    -- Remove trailing comma and space if present
+    if formatted_spells:sub(-2) == ', ' then
+        formatted_spells = formatted_spells:sub(1, -3)
+    end
+    return formatted_spells
+end
+
+function get_item_name(item_id)
+    local item = resources.items[item_id]
+    if item then
+        return item.name
+    else
+        return 'Unknown Item'
+    end
+end
+
+function get_spell_name(spell_id)
+    local spell = resources.spells[spell_id]
+    if spell then
+        return spell.name
+    else
+        return 'Unknown Spell'
+    end
 end
 
 function add_to_chat(color, text)
