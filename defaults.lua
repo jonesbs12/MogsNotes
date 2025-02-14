@@ -12,7 +12,7 @@ local defaults = {
         },
         text = {
             size = 8,
-            font = 'Consolas',
+            font = 'Arial',
             stroke = {
                 width = 1,
                 alpha = 200

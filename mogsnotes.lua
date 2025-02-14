@@ -35,7 +35,7 @@ windower.register_event('target change', function(new_id, old_id)
             local target_info = mob_data.Names[target.name]
             last_target = target.name
             if target_info then
-                target_data = '\\cs(255,0,0)' .. target_info.Name .. '\\cr\n'
+                target_data = '\\cs(255,215,0)' .. target_info.Name .. '\\cr\n'
 
                 -- Construct the Aggro conditions line
                 if target_info.Link then
@@ -47,7 +47,7 @@ windower.register_event('target change', function(new_id, old_id)
                 target_data = target_data .. '\n'
 
                 -- Construct the Aggro line
-                target_data = target_data .. '\\cs(255,255,0)Aggro: \\cr'
+                target_data = target_data .. '\\cs(173,216,230)Aggro: \\cr'
                 if target_info.Sight then
                     target_data = target_data .. 'Sight '
                 end
@@ -68,16 +68,15 @@ windower.register_event('target change', function(new_id, old_id)
                 end
                 target_data = target_data .. '\n'
 
-                --target_data = target_data .. '\\cs(255,255,0)Job: \\cr' .. tostring(target_info.Job) .. '\n'
+                --target_data = target_data .. '\\cs(173,216,230)Job: \\cr' .. tostring(target_info.Job) .. '\n'
 
                 -- Construct the Level range line
-                target_data = target_data .. '\\cs(255,255,0)Level Range: \\cr' .. tostring(target_info.MinLevel) .. ' - ' .. tostring(target_info.MaxLevel) .. '\n'
+                target_data = target_data .. '\\cs(173,216,230)Level Range: \\cr' .. tostring(target_info.MinLevel) .. ' - ' .. tostring(target_info.MaxLevel) .. '\n'
 
-                target_data = target_data .. '\\cs(255,255,0)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
-                target_data = target_data .. '\\cs(255,255,0)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
-                target_data = target_data .. '\\cs(255,255,0)Spells: \\cr' .. format_spells(target_info.Spells) .. '\n'
-                target_data = target_data .. '\\cs(255,255,0)Drops: \\cr' .. format_drops(target_info.Drops) .. '\n'
-                target_data = target_data .. '\\cs(255,255,0)Modifiers: \\cr' .. '\n'
+                target_data = target_data .. '\\cs(173,216,230)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
+                target_data = target_data .. '\\cs(173,216,230)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
+                target_data = target_data .. '\\cs(173,216,230)Spells: \\cr' .. format_spells(target_info.Spells) .. '\n'
+                target_data = target_data .. '\\cs(173,216,230)Drops: \\cr' .. format_drops(target_info.Drops) .. '\n\n'
 
                 -- Define color mappings for each modifier
                 local color_mappings = {
@@ -97,7 +96,7 @@ windower.register_event('target change', function(new_id, old_id)
                 local dark_modifiers = {'Earth', 'Lightning', 'Water', 'Dark'}                
 
                 -- Add weapon modifiers
-                target_data = target_data .. '\\cs(255,255,0)Weapon: \\cr\n'
+                target_data = target_data .. '\\cs(173,216,230)Weapon: \\cr\n'
                 for _, mod in ipairs(weapon_modifiers) do
                     if target_info.Modifiers[mod] then
                         local value = target_info.Modifiers[mod]
@@ -113,7 +112,7 @@ windower.register_event('target change', function(new_id, old_id)
                 target_data = target_data .. '\n'
 
                 -- Add elemental modifiers
-                target_data = target_data .. '\\cs(255,255,0)Element: \\cr\n'
+                target_data = target_data .. '\\cs(173,216,230)Element: \\cr\n'
                 for _, mod in ipairs(dark_modifiers) do
                     if target_info.Modifiers[mod] then
                         local color = color_mappings[mod]
@@ -259,7 +258,7 @@ end
 function format_drops(drops)
     local formatted_drops = ''
     for i, drop in ipairs(drops) do
-        if i % 5 == 0 then
+        if i % 3 == 0 then
             formatted_drops = formatted_drops .. get_item_name(drop) .. '\n'
         else
             formatted_drops = formatted_drops .. get_item_name(drop) .. ', '
@@ -276,7 +275,7 @@ end
 function format_spells(spells)
     local formatted_spells = ''
     for i, spell in ipairs(spells) do
-        if i % 5 == 0 then
+        if i % 3 == 0 then
             formatted_spells = formatted_spells .. get_spell_name(spell) .. '\n'
         else
             formatted_spells = formatted_spells .. get_spell_name(spell) .. ', '
