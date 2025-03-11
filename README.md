@@ -18,9 +18,9 @@ This is a work in progress for personal use. You are free to use this project yo
 
 To install MogsNotes, follow these steps:
 
-1. Download the latest release from the [releases page](https://github.com/yourusername/MogsNotes/releases).
+1. Click the code dropdown. Download ZIP
 2. Extract the files to your Windower 4 addons directory.
-3. Add `mogsnotes` to your Windower 4 script.
+3. Add `mogsnotes` to your Windower 4 script. lua load mogsnotes
 
 ## Usage
 

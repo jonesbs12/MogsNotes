@@ -16,6 +16,8 @@ local settings = config.load(defaults)
 local last_target = ''
 local mob_data = {}
 local target_data = ''
+local bo = '\\cs(255,215,0)[ \\cr'
+local bc = '\\cs(255,215,0) ]\\cr'
 
 -- Create a text box for target_data
 local target_box = texts.new('${data}', settings.target_box, settings)
@@ -24,7 +26,7 @@ target_box.data = target_data
 -- Load the zone data for the current zone
 windower.register_event('zone change', function(new_id, old_id)
     load_zone_data()
-    set_up_mob_box()
+    --set_up_mob_box()
 end)
 
 windower.register_event('target change', function(new_id, old_id)
@@ -39,10 +41,10 @@ windower.register_event('target change', function(new_id, old_id)
 
                 -- Construct the Aggro conditions line
                 if target_info.Link then
-                    target_data = target_data .. 'Linking '
+                    target_data = target_data .. '\\cs(200,0,0)Linking\\cr '
                 end
                 if target_info.TrueSight then
-                    target_data = target_data .. 'TrueSight '
+                    target_data = target_data .. '\\cs(200,0,0)TrueSight\\cr '
                 end
                 target_data = target_data .. '\n'
 
@@ -68,20 +70,20 @@ windower.register_event('target change', function(new_id, old_id)
                 end
                 target_data = target_data .. '\n'
 
-                --target_data = target_data .. '\\cs(173,216,230)Job: \\cr' .. tostring(target_info.Job) .. '\n'
+                --target_data = target_data .. '\\cs(255,255,0)Job: \\cr' .. tostring(target_info.Job) .. '\n'
 
                 -- Construct the Level range line
                 target_data = target_data .. '\\cs(173,216,230)Level Range: \\cr' .. tostring(target_info.MinLevel) .. ' - ' .. tostring(target_info.MaxLevel) .. '\n'
 
                 target_data = target_data .. '\\cs(173,216,230)Immunities: \\cr' .. get_immunity_text(target_info.Immunities) .. '\n'
-                target_data = target_data .. '\\cs(173,216,230)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                
+                target_data = target_data .. '\\cs(173,216,230)Respawn: \\cr' .. tostring(target_info.Respawn) .. '\n'                             
                 target_data = target_data .. '\\cs(173,216,230)Spells: \\cr' .. format_spells(target_info.Spells) .. '\n'
                 target_data = target_data .. '\\cs(173,216,230)Drops: \\cr' .. format_drops(target_info.Drops) .. '\n\n'
 
                 -- Define color mappings for each modifier
                 local color_mappings = {
                     Fire = {255, 0, 0},       -- Red
-                    Ice = {0, 0, 255},        -- Blue
+                    Ice = {50, 50, 255},      -- Blue
                     Wind = {0, 255, 0},       -- Green
                     Earth = {139, 69, 19},    -- Brown
                     Lightning = {255, 255, 0},-- Yellow
@@ -93,7 +95,7 @@ windower.register_event('target change', function(new_id, old_id)
                 -- Group weapon and elemental modifiers
                 local weapon_modifiers = {'Slashing', 'Piercing', 'H2H', 'Impact'}
                 local light_modifiers = {'Fire', 'Ice', 'Wind', 'Light'}
-                local dark_modifiers = {'Earth', 'Lightning', 'Water', 'Dark'}                
+                local dark_modifiers =  {'Earth', 'Lightning', 'Water', 'Dark'}                
 
                 -- Add weapon modifiers
                 target_data = target_data .. '\\cs(173,216,230)Weapon: \\cr\n'
@@ -106,47 +108,46 @@ windower.register_event('target change', function(new_id, old_id)
                         elseif value < 1 then
                             value_color = '\\cs(255,0,0)' -- Red for values under 1
                         end
-                        target_data = target_data .. mod .. ': ' .. value_color .. tostring(value) .. ' \\cr'
+                        target_data = target_data .. bo ..  mod .. ': ' .. value_color .. tostring(value) .. ' \\cr' .. bc
                     end
                 end
                 target_data = target_data .. '\n'
 
-                -- Add elemental modifiers
+                 -- Helper functions for elemental display
+                local function get_value_style(value)
+                    if value == -1 then
+                        return '\\cs(0,0,255)', 'A'     -- Blue for absorb
+                    elseif value > 1 then
+                        return '\\cs(0,255,0)', value   -- Green for weakness
+                    elseif value < 1 then
+                        return '\\cs(255,0,0)', value   -- Red for resistance
+                    end
+                    return '\\cs(255,255,255)', value   -- White for neutral
+                end
+
+                local function format_element(mod, value, color)
+                    local value_color, display_value = get_value_style(value)
+                    local padded_mod = mod .. string.rep(' ', math.max(0, 10 - #mod))
+                    return string.format(bo .. '\\cs(%d,%d,%d)%s: %s%s\\cr', 
+                        color[1], color[2], color[3],
+                        mod, value_color, display_value)
+                end
+
+                -- Replace the existing elemental modifiers section with:
                 target_data = target_data .. '\\cs(173,216,230)Element: \\cr\n'
+
+                -- Process dark modifiers
                 for _, mod in ipairs(dark_modifiers) do
                     if target_info.Modifiers[mod] then
-                        local color = color_mappings[mod]
-                        local value = target_info.Modifiers[mod]
-                        local display_value = tostring(value)
-                        local value_color = '\\cs(255,255,255)' -- Default to white
-                    
-                        if value == -1 then
-                            value_color = '\\cs(0,0,255)' -- Blue for value -1
-                            display_value = 'A'
-                        elseif value > 1 then
-                            value_color = '\\cs(0,255,0)' -- Green for values over 1
-                        elseif value < 1 then
-                            value_color = '\\cs(255,0,0)' -- Red for values under 1
-                        end                    
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. display_value .. ' \\cr'
+                        target_data = target_data .. format_element(mod, target_info.Modifiers[mod], color_mappings[mod]) .. bc
                     end
                 end
                 target_data = target_data .. '\n'
+
+                -- Process light modifiers
                 for _, mod in ipairs(light_modifiers) do
                     if target_info.Modifiers[mod] then
-                        local color = color_mappings[mod]
-                        local value = target_info.Modifiers[mod]
-                        local display_value = tostring(value)
-                        local value_color = '\\cs(255,255,255)' -- Default to white
-                        if value == -1 then
-                            value_color = '\\cs(0,0,255)' -- Blue for value -1
-                            display_value = 'A'
-                        elseif value > 1 then
-                            value_color = '\\cs(0,255,0)' -- Green for values over 1
-                        elseif value < 1 then
-                            value_color = '\\cs(255,0,0)' -- Red for values under 1
-                        end
-                        target_data = target_data .. '\\cs(' .. color[1] .. ',' .. color[2] .. ',' .. color[3] .. ')' .. mod .. ': ' .. value_color .. display_value .. ' \\cr'
+                        target_data = target_data .. format_element(mod, target_info.Modifiers[mod], color_mappings[mod]) .. bc
                     end
                 end
                 target_data = target_data .. '\n'
