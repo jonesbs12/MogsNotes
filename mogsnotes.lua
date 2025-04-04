@@ -18,6 +18,8 @@ local mob_data = {}
 local target_data = ''
 local bo = '\\cs(255,215,0)[ \\cr'
 local bc = '\\cs(255,215,0) ]\\cr'
+local currentZone = windower.ffxi.get_info().zone
+local currentZoneName = resources.zones[windower.ffxi.get_info().zone].name
 
 -- Create a text box for target_data
 local target_box = texts.new('${data}', settings.target_box, settings)
@@ -37,7 +39,8 @@ windower.register_event('target change', function(new_id, old_id)
             local target_info = mob_data.Names[target.name]
             last_target = target.name
             if target_info then
-                target_data = '\\cs(255,215,0)' .. target_info.Name .. '\\cr\n'
+                target_data = '\\cs(150,50,225)' .. currentZoneName .. '\\cr\n\n'
+                target_data = target_data .. '\\cs(255,215,0)' .. target_info.Name .. '\\cr\n'
 
                 -- Construct the Aggro conditions line
                 if target_info.Link then
@@ -152,10 +155,12 @@ windower.register_event('target change', function(new_id, old_id)
                 end
                 target_data = target_data .. '\n'
             else
-                target_data = 'No data available for this target.'
+                target_data = '\\cs(150,50,225)' .. currentZoneName .. '\\cr\n\n'
+                target_data = target_data .. 'No data available for this target.'
             end
         else
-            target_data = 'Mob data not loaded.'
+            target_data = '\\cs(150,50,225)' .. currentZoneName .. '\\cr\n\n'
+            target_data = target_data .. 'Mob data not loaded.'
         end
         -- Update the text box with the new target_data
         target_box.data = target_data
@@ -190,8 +195,8 @@ end)
 
 
 function load_zone_data()
-    local currentZone = windower.ffxi.get_info().zone
-    local currentZoneName = resources.zones[windower.ffxi.get_info().zone].name
+    currentZone = windower.ffxi.get_info().zone
+    currentZoneName = resources.zones[windower.ffxi.get_info().zone].name    
 
     -- Construct the file path based on the zone ID
     local file_path = string.format('mobdata/%d', currentZone)
